@@ -40,21 +40,21 @@ void db_hashfile_prepare(HFILE *hfile,short nofbackets){
 /**
   ƒwƒbƒ_‚ğ•Û‘¶‚·‚é
  */
+
 int db_hashfile_write_header(HFILE *hfile){
   if(hfile->header==NULL){
     return -1;
   }
-  lseek(hfile->fd,0,SEEK_SET);
-  write(hfile->fd,hfile->header,sizeof(hashfile_header));
-  fsync(hfile->fd);
+  db_write_header(hfile->fd,(char *)(hfile->header),sizeof(hashfile_header));
 }
 
 /**
    ƒwƒbƒ_‚ğæ“¾‚·‚é
  */
 hashfile_header *db_hashfile_get_header(HFILE *hfile){
-  lseek(hfile->fd,0,SEEK_SET);
-  read(hfile->header,sizeof(hashfile_header),hfile->fd);
+   db_get_header(hfile->fd,(char *)hfile->header,sizeof(hashfile_header));
+//  lseek(hfile->fd,0,SEEK_SET);
+//  read(hfile->header,sizeof(hashfile_header),hfile->fd);
   return hfile->header;
 }
 
