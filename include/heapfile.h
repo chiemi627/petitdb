@@ -1,5 +1,5 @@
 typedef struct HEAPFILE{
-  FILE *fp;
+  int fd;
   PAGE *page;
 } HEAPFILE;
 

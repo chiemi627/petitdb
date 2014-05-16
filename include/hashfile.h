@@ -4,7 +4,7 @@ typedef struct hashfile_header{
 } hashfile_header;
 
 typedef struct HFILE{
-  FILE *fp;
+  int fd;
   PAGE *page;
   hashfile_header *header;
 } HFILE;

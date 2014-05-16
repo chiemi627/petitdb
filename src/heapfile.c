@@ -16,7 +16,7 @@ HEAPFILE *new_HEAPFILE(){
 }
 
 void db_heapfile_create_and_open(HEAPFILE *hfile,char *filename){
-  hfile->fp = db_create_and_open(filename);
+  hfile->fd = db_create_and_open(filename);
 }
 
 /**
@@ -28,7 +28,7 @@ short db_heapfile_get_the_last_page(HEAPFILE *hfile){
   short nextpage = 0;
   while(nextpage>=0){
     pageno = nextpage;
-    get_page(hfile->fp,pageno,hfile->page);
+    get_page(hfile->fd,pageno,hfile->page);
     nextpage = get_next_page_no(hfile->page);
   }
   return hfile->page->pageno;
@@ -43,7 +43,7 @@ record *db_heapfile_read(HEAPFILE *hfile){
   record *rd=NULL;
   
   if(hfile->page->pagebuf == NULL){
-    get_page(hfile->fp,0,hfile->page);
+    get_page(hfile->fd,0,hfile->page);
   }
   
   while(rd==NULL){
@@ -55,7 +55,7 @@ record *db_heapfile_read(HEAPFILE *hfile){
       }
       else{
       	//新しいページに移動する
-      	get_page(hfile->fp,nextpage,hfile->page);
+      	get_page(hfile->fd,nextpage,hfile->page);
       }
     }
   }
@@ -79,7 +79,7 @@ int db_heapfile_insert(HEAPFILE *hfile, record *rd){
      nextpage = hfile->page->pageno + 1;
      //前のページに次のページの番号を書いて保存する
      memcpy((hfile->page->pagebuf),&nextpage,sizeof(short));
-     write_page(hfile->fp,hfile->page);
+     write_page(hfile->fd,hfile->page);
      //次のページを作成する(pagebufは上書きする)
      generate_page(hfile->page);
      hfile->page->pageno = nextpage;
@@ -90,15 +90,15 @@ int db_heapfile_insert(HEAPFILE *hfile, record *rd){
 }
 
 void db_heapfile_get_page(HEAPFILE *hfile,short pno){
-  get_page(hfile->fp,pno,hfile->page);
+  get_page(hfile->fd,pno,hfile->page);
 }
 
 int db_heapfile_close(HEAPFILE *hfile){
   if(hfile==NULL){
     return -1;
   }
-  if(hfile->fp!=NULL){
-    db_close(hfile->fp);
+  if(hfile->fd!=NULL){
+    db_close(hfile->fd);
   }
   free(hfile->page->pagebuf);
 }

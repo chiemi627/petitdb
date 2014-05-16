@@ -29,7 +29,7 @@ void db_create_hashfile_and_open_makes_backet(){
     assert(get_the_first_pointer(hfile->page)==sizeof(short)*3);
     assert(get_the_last_pointer(hfile->page)==PAGESIZE-sizeof(short));
   }
-  db_close(hfile->fp);
+  db_close(hfile->fd);
   db_drop(filename);
   printf("ok\n");
 }
@@ -70,7 +70,7 @@ void db_hashfile_inserting_5_records_store_in_file(){
       rd->age = i;
 	  db_hashfile_insert(hfile,rd);
   }
-  db_save(hfile->fp,hfile->page);
+  db_save(hfile->fd,hfile->page);
   
   // == TEST ==
   short fptr_answers[4] = {24,42,24,24};
@@ -83,7 +83,7 @@ void db_hashfile_inserting_5_records_store_in_file(){
 	assert(lptr==lptr_answers[i]);
   }
   
-  db_close(hfile->fp);
+  db_close(hfile->fd);
   db_drop(filename);  
   printf("ok\n");
 }
@@ -107,7 +107,7 @@ void db_hashfile_inserting_12_records_makes_overflow_backet(){
       rd->age = i;
 	  db_hashfile_insert(hfile,rd);
   }
-  db_save(hfile->fp,hfile->page);
+  db_save(hfile->fd,hfile->page);
   // == TEST ==
   short fptr_answers[5] = {6,204,6,6,24};
   short lptr_answers[5] = {254,210,254,254,250};
@@ -147,7 +147,7 @@ void db_hashfile_query_by_scan_success(){
       rd->age = i;
 	  db_hashfile_insert(hfile,rd);
   }
-  db_save(hfile->fp,hfile->page);
+  db_save(hfile->fd,hfile->page);
   // == TEST ==
   recordList *result = db_hashfile_search_by_scan(hfile,"E");
   init_list(result);
@@ -183,7 +183,7 @@ void db_hashfile_query_by_hash_success(){
       rd->age = i;
 	  db_hashfile_insert(hfile,rd);
   }
-  db_save(hfile->fp,hfile->page);
+  db_save(hfile->fd,hfile->page);
   // == TEST ==
   recordList *result = db_hashfile_search_by_hash(hfile,"E");
   init_list(result);

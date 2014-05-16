@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "page.h"
+#include "recordlist.h"
 #include "dbfile.h"
 #include "heapfile.h"
 
@@ -12,10 +13,8 @@ void db_open_returns_NULL_if_file_is_not_found(){
   fflush(stderr);
 
   char *dammyfile = "xxxxx";
-  FILE *fp=NULL;
-  assert(fp==NULL);
-  fp = db_open(dammyfile);
-  assert(fp==NULL);
+  int fd = db_open(dammyfile);
+  assert(fd==-1);
   
   fprintf(stderr,"ok\n");
   fflush(stderr);
@@ -33,6 +32,7 @@ void db_create_and_open_has_the_first_page(){
   db_heapfile_create_and_open(hfile,filename);  
   db_heapfile_get_page(hfile,0);
   unsigned short fptr = get_the_first_pointer(hfile->page);
+  printf("fptr=%d\n",fptr);
   assert(fptr==6);
   unsigned short lptr = get_the_last_pointer(hfile->page);
   assert(lptr==254);
@@ -112,7 +112,7 @@ void db_insert_store_the_sample_record_in_dbfile(){
   //Test1: レコードの空きポインタが 6+sizeof(record)になっている
   short fptr2 = get_the_first_pointer(hfile->page);
   assert(fptr2 == 6+sizeof(record));
-  //db_save(hfile->fp,hfile->page);
+  //db_save(hfile->fd,hfile->page);
     
   //もう一度開きなおす
   //一番最初のページを取得する
@@ -310,7 +310,7 @@ void db_insert_100_records_and_read(){
       rd->age = i;
 	  db_heapfile_insert(hfile,rd);
   }
-  db_save(hfile->fp,hfile->page);
+  db_save(hfile->fd,hfile->page);
   
   hfile->page->pagebuf = NULL;
   int cnt=0;
