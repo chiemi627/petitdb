@@ -18,4 +18,8 @@ void db_hashfile_prepare(HFILE *hfile,short nofbackets);
 short db_hashfile_get_the_last_page(HFILE *hfile);
 short db_hashfile_get_hash(char *value, short nofbackets);
 int db_hashfile_insert(HFILE *hfile, record *rd);
+record *db_hashfile_read(HFILE *hfile);
+void db_hashfile_get_page(HFILE *hfile,short pno);
 int db_hashfile_close(HFILE *hfile);
+recordList *db_hashfile_search_by_scan(HFILE *hfile,char *keyword);
+recordList *db_hashfile_search_by_hash(HFILE *hfile,char *keyword);

@@ -10,3 +10,4 @@ record *db_heapfile_read(HEAPFILE *hfile);
 int db_heapfile_insert(HEAPFILE *hfile, record *rd);
 void db_heapfile_get_page(HEAPFILE *hfile,short pno);
 int db_heapfile_close(HEAPFILE *hfile);
+recordList *db_heapfile_search_by_scan(HEAPFILE *hfile,char *keyword);

@@ -1,4 +1,3 @@
-#include "page.h"
 
 typedef struct recordNode{
 	record *record;

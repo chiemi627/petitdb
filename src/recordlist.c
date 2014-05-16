@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "page.h"
 #include "recordlist.h"
 
 recordList *newList(){

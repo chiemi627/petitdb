@@ -2,9 +2,9 @@
 #include "string.h"
 #include "stdlib.h"
 #include "page.h"
+#include "recordlist.h"
 #include "dbfile.h"
 #include "heapfile.h"
-
 /**
   ヒープファイルの作業用変数領域を作る
  */
@@ -101,4 +101,23 @@ int db_heapfile_close(HEAPFILE *hfile){
     db_close(hfile->fp);
   }
   free(hfile->page->pagebuf);
+}
+
+recordList *db_heapfile_search_by_scan(HEAPFILE *hfile,char *keyword){
+	int i;
+	record *rd;
+	recordList *result = newList();
+	db_heapfile_get_page(hfile,0);	
+	while((rd=db_heapfile_read(hfile))!=NULL){
+		if(strcmp(rd->name,keyword)==0){
+			record *rd2=(record *)malloc(sizeof(record));
+			strcpy(rd2->name,rd->name);
+			rd2->age = rd->age;			
+			if(add_record(result,rd2)<0){
+				return NULL;
+			}
+		}
+	}
+  	return result;
+
 }

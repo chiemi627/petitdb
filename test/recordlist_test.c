@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "page.h"
 #include "recordlist.h"
 #include "assert.h"
 

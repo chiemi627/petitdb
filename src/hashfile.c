@@ -2,6 +2,7 @@
 #include "string.h"
 #include "stdlib.h"
 #include "page.h"
+#include "recordlist.h"
 #include "dbfile.h"
 #include "hashfile.h"
 
@@ -139,6 +140,34 @@ int db_hashfile_insert(HFILE *hfile, record *rd){
   return overflow;
 }
 
+/**
+  ヒープファイルから1レコードを読み込む
+ */
+record *db_hashfile_read(HFILE *hfile){
+
+  record *rd=NULL;
+  
+  if(hfile->page->pagebuf == NULL){
+    get_page(hfile->fp,0,hfile->page);
+  }
+  
+  while(rd==NULL){
+  	rd = read_record(hfile->page);
+    if(rd==NULL){
+      short nextpage = get_next_page_no(hfile->page);
+      if(nextpage==-1){
+      	return NULL;
+      }
+      else{
+      	//新しいページに移動する
+      	get_page(hfile->fp,nextpage,hfile->page);
+      }
+    }
+  }
+  return rd; 
+}
+
+
 void db_hashfile_get_page(HFILE *hfile,short pno){
   get_page(hfile->fp,pno,hfile->page);
 }
@@ -154,3 +183,41 @@ int db_hashfile_close(HFILE *hfile){
   free(hfile->page->pagebuf);
 }
 
+recordList *db_hashfile_search_by_scan(HFILE *hfile,char *keyword){
+	int i;
+	record *rd;
+	recordList *result = newList();
+	for(i=0;i<db_hashfile_get_number_of_initial_backets(hfile);i++){
+		db_hashfile_get_page(hfile,i);
+		while((rd=db_hashfile_read(hfile))!=NULL){
+			if(strcmp(rd->name,keyword)==0){
+				record *rd2=(record *)malloc(sizeof(record));
+				strcpy(rd2->name,rd->name);
+				rd2->age = rd->age;			
+				if(add_record(result,rd2)<0){
+					return NULL;
+				}
+			}
+		}
+  	}
+  	return result;
+}
+
+recordList *db_hashfile_search_by_hash(HFILE *hfile,char *keyword){
+	short h;
+	record *rd;
+	recordList *result = newList();
+	h = db_hashfile_get_hash(keyword, hfile->header->nofbackets_init);
+	db_hashfile_get_page(hfile,h);
+	while((rd=db_hashfile_read(hfile))!=NULL){
+		if(strcmp(rd->name,keyword)==0){
+			record *rd2=(record *)malloc(sizeof(record));
+			strcpy(rd2->name,rd->name);
+			rd2->age = rd->age;			
+			if(add_record(result,rd2)<0){
+				return NULL;
+			}
+		}	
+  	}
+  	return result;
+}
