@@ -32,7 +32,6 @@ void db_create_and_open_has_the_first_page(){
   db_heapfile_create_and_open(hfile,filename);  
   db_heapfile_get_page(hfile,0);
   unsigned short fptr = get_the_first_pointer(hfile->page);
-  printf("fptr=%d\n",fptr);
   assert(fptr==6);
   unsigned short lptr = get_the_last_pointer(hfile->page);
   assert(lptr==254);

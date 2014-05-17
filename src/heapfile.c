@@ -17,6 +17,7 @@ HEAPFILE *new_HEAPFILE(){
 
 void db_heapfile_create_and_open(HEAPFILE *hfile,char *filename){
   hfile->fd = db_create_and_open(filename);
+  return;
 }
 
 int db_heapfile_open(HEAPFILE *hfile,char *filename){
@@ -92,10 +93,12 @@ int db_heapfile_insert(HEAPFILE *hfile, record *rd){
        return -1;
      }
   }
+  return 1;
 }
 
 void db_heapfile_get_page(HEAPFILE *hfile,short pno){
   get_page(hfile->fd,pno,hfile->page);
+  return;
 }
 
 int db_heapfile_close(HEAPFILE *hfile){
@@ -106,6 +109,7 @@ int db_heapfile_close(HEAPFILE *hfile){
   write_page(hfile->fd,hfile->page);  
   db_close(hfile->fd);
   free(hfile->page->pagebuf);
+  return 1;
 }
 
 recordList *db_heapfile_search_by_scan(HEAPFILE *hfile,char *keyword){
@@ -129,4 +133,5 @@ recordList *db_heapfile_search_by_scan(HEAPFILE *hfile,char *keyword){
 
 void db_heapfile_write_page(HEAPFILE *hfile){
      write_page(hfile->fd,hfile->page);
+     return;
 }

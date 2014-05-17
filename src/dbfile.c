@@ -16,7 +16,7 @@ int db_create_and_open(char *filename){
     PAGE *page = (PAGE *)malloc(PAGESIZE);
     page->pagebuf = NULL;
     
-    fd = open(filename,O_RDWR|O_CREAT|O_TRUNC);
+    fd = open(filename,O_RDWR|O_CREAT|O_TRUNC,0666);
     if(fd<0){
 		printf("file open error\n");
 		return -1;

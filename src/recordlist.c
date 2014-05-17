@@ -8,6 +8,7 @@ recordList *newList(){
  rlist->first = NULL;
  rlist->last = NULL;
  rlist->current = NULL;
+ return rlist;
 }
 
 int add_record(recordList *list, record *rd){
@@ -26,6 +27,7 @@ int add_record(recordList *list, record *rd){
 	list->last->next = node;
 	list->last = node;
  }
+ return 1;
 }
 
 void init_list(recordList *list){

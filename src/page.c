@@ -64,7 +64,7 @@ int generate_page(PAGE *page){
   short rinfo = RECORDEND;
   ptr = page->pagebuf + PAGESIZE - sizeof(short);
   memcpy(ptr,&rinfo,sizeof(short));
-  
+  return 1;
 }
 
 /**
@@ -87,6 +87,7 @@ int has_more_space(PAGE *page){
   else{
     return 1;
   }
+  return 1;
 }
 
 /**
@@ -162,4 +163,5 @@ unsigned short get_the_last_pointer(PAGE *page){
 
 int set_next_page_no(PAGE *page, short pageno){
   memcpy(page->pagebuf,&pageno,sizeof(short));
+  return 1;
 }

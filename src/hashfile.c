@@ -42,6 +42,7 @@ void db_hashfile_prepare(HFILE *hfile,short nofbackets){
    hfile->header->nofbackets_init = nofbackets;
    hfile->header->nofbackets_all = nofbackets;
    db_hashfile_write_header(hfile);
+   return;
  }
 /**
   ƒwƒbƒ_‚ð•Û‘¶‚·‚é
@@ -55,6 +56,7 @@ int db_hashfile_write_header(HFILE *hfile){
   write(hfile->fd,&hfile->header->nofbackets_init,sizeof(short));
   write(hfile->fd,&hfile->header->nofbackets_all,sizeof(short));
   fsync(hfile->fd);  
+  return 1;
 }
 
 /**
@@ -64,7 +66,8 @@ void db_hashfile_get_header(HFILE *hfile){
    //hfile->header = db_get_header(hfile->fd,(char *)hfile->header,sizeof(hashfile_header));
    lseek(hfile->fd,0,SEEK_SET);
    read(hfile->fd,&hfile->header->nofbackets_init,sizeof(short));
-   read(hfile->fd,&hfile->header->nofbackets_all,sizeof(short));   
+   read(hfile->fd,&hfile->header->nofbackets_all,sizeof(short));
+   return;
 }
 
 /**
@@ -178,6 +181,7 @@ record *db_hashfile_read(HFILE *hfile){
 
 void db_hashfile_get_page(HFILE *hfile,short pno){
   get_page(hfile->fd,pno,hfile->page);
+  return;
 }
 
 
@@ -186,6 +190,7 @@ int db_hashfile_close(HFILE *hfile){
     return -1;
   }
   db_close(hfile->fd);
+  return 1;
 }
 
 recordList *db_hashfile_search_by_scan(HFILE *hfile,char *keyword){
@@ -230,5 +235,6 @@ recordList *db_hashfile_search_by_hash(HFILE *hfile,char *keyword){
 void db_hashfile_write_page(HFILE *hfile){
      write_page(hfile->fd,hfile->page);
      db_hashfile_write_header(hfile);
+     return;
 }
 
