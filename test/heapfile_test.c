@@ -111,7 +111,6 @@ void db_insert_store_the_sample_record_in_dbfile(){
   //Test1: レコードの空きポインタが 6+sizeof(record)になっている
   short fptr2 = get_the_first_pointer(hfile->page);
   assert(fptr2 == 6+sizeof(record));
-  //db_save(hfile->fd,hfile->page);
     
   //もう一度開きなおす
   //一番最初のページを取得する
@@ -182,7 +181,6 @@ void db_insert_11_records_in_one_page(){
       rd->age = i;
 	  db_heapfile_insert(hfile,rd);
   }
-  //db_save(hfile->fp,hfile->page);
   
   //一番最初のページを取得する
   db_heapfile_get_page(hfile,0);
@@ -222,7 +220,6 @@ void db_insert_12_records_in_two_pages(){
       rd->age = i;
 	  db_heapfile_insert(hfile,rd);
   }
-  //db_save(hfile->fp,hfile->page);  
   //最後のページ
   assert(hfile->page->pageno==1);
   short pno = db_heapfile_get_the_last_page(hfile);

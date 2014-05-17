@@ -3,7 +3,6 @@ LIBS	=	petitdb
 LIBDIR	= 	.
 
 all:	heapfile_test hashfile_test recordlist_test
-	
 
 heapfile_test: 
 	gcc -o heapfile_test -g -L$(LIBDIR) -l$(LIBS) -I$(INCDIR) heapfile_test.c

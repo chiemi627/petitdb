@@ -108,7 +108,6 @@ int db_heapfile_close(HEAPFILE *hfile){
   
   write_page(hfile->fd,hfile->page);  
   db_close(hfile->fd);
-  free(hfile->page->pagebuf);
   return 1;
 }
 
