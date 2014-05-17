@@ -5,6 +5,7 @@ OBJS	=	page.o dbfile.o heapfile.o hashfile.o recordlist.o
 $(TARGET):	$(OBJS)
 	gcc -shared -Wl,-soname,$(TARGET) -o $(TARGET) $(OBJS)
 	cp $(TARGET) ../test/.
+	cp $(TARGET) ../samples/.
 	mv $(TARGET) ../lib/.
 	rm *.o
 .c.o:

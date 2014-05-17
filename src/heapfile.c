@@ -19,6 +19,11 @@ void db_heapfile_create_and_open(HEAPFILE *hfile,char *filename){
   hfile->fd = db_create_and_open(filename);
 }
 
+int db_heapfile_open(HEAPFILE *hfile,char *filename){
+  hfile->fd = db_open(filename);
+  return hfile->fd;
+}
+
 /**
   ディスクから最後の1ページを取り出す
   （スキャンする）
@@ -78,7 +83,7 @@ int db_heapfile_insert(HEAPFILE *hfile, record *rd){
   if(insert_record_into_page(hfile->page,rd)<0){
      nextpage = hfile->page->pageno + 1;
      //前のページに次のページの番号を書いて保存する
-     memcpy((hfile->page->pagebuf),&nextpage,sizeof(short));
+     set_next_page_no(hfile->page,nextpage);
      write_page(hfile->fd,hfile->page);
      //次のページを作成する(pagebufは上書きする)
      generate_page(hfile->page);
@@ -97,9 +102,9 @@ int db_heapfile_close(HEAPFILE *hfile){
   if(hfile==NULL){
     return -1;
   }
-  if(hfile->fd!=NULL){
-    db_close(hfile->fd);
-  }
+  
+  write_page(hfile->fd,hfile->page);  
+  db_close(hfile->fd);
   free(hfile->page->pagebuf);
 }
 
@@ -120,4 +125,8 @@ recordList *db_heapfile_search_by_scan(HEAPFILE *hfile,char *keyword){
 	}
   	return result;
 
+}
+
+void db_heapfile_write_page(HEAPFILE *hfile){
+     write_page(hfile->fd,hfile->page);
 }

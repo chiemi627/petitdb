@@ -23,3 +23,6 @@ void db_hashfile_get_page(HFILE *hfile,short pno);
 int db_hashfile_close(HFILE *hfile);
 recordList *db_hashfile_search_by_scan(HFILE *hfile,char *keyword);
 recordList *db_hashfile_search_by_hash(HFILE *hfile,char *keyword);
+int db_hashfile_open(HFILE *hfile,char *filename);
+void db_hashfile_create_and_open(HFILE *hfile,char *filename);
+void db_hashfile_write_page(HFILE *hfile);

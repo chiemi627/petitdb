@@ -50,7 +50,8 @@ int generate_page(PAGE *page){
 
   //次のページへのポインタ
   short next_page = -1;
-  memcpy(ptr,&next_page,sizeof(short));
+  //memcpy(ptr,&next_page,sizeof(short));
+  set_next_page_no(page,next_page);
   ptr += sizeof(short);
   //レコードの最終地点
   short fptr = sizeof(short)*3;
@@ -157,4 +158,8 @@ unsigned short get_the_last_pointer(PAGE *page){
    char *ptr = page->pagebuf+sizeof(short)*2;
    memcpy(&lptr,ptr,sizeof(short));
    return lptr;
+}
+
+int set_next_page_no(PAGE *page, short pageno){
+  memcpy(page->pagebuf,&pageno,sizeof(short));
 }

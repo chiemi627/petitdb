@@ -21,17 +21,21 @@ void db_hashfile_create_and_open(HFILE *hfile,char *filename){
   hfile->fd = db_create_and_open(filename);
 }
 
+int db_hashfile_open(HFILE *hfile,char *filename){
+  hfile->fd = db_open(filename);
+  return hfile->fd;
+}
+
 /**
   データベースファイルを作って開く
  */
 void db_hashfile_prepare(HFILE *hfile,short nofbackets){
    int i;
    int fd = hfile->fd;
-   PAGE *page = (PAGE *)malloc(PAGESIZE);
    for(i=0;i<nofbackets;i++){
-     generate_page(page);
-     page->pageno=i;
-     write_page(fd,page);   
+     generate_page(hfile->page);
+     hfile->page->pageno=i;
+     db_hashfile_write_page(hfile);   
    }
    hfile->header->nofbackets_init = nofbackets;
    hfile->header->nofbackets_all = nofbackets;
@@ -53,8 +57,6 @@ int db_hashfile_write_header(HFILE *hfile){
  */
 hashfile_header *db_hashfile_get_header(HFILE *hfile){
    db_get_header(hfile->fd,(char *)hfile->header,sizeof(hashfile_header));
-//  lseek(hfile->fd,0,SEEK_SET);
-//  read(hfile->header,sizeof(hashfile_header),hfile->fd);
   return hfile->header;
 }
 
@@ -125,8 +127,8 @@ int db_hashfile_insert(HFILE *hfile, record *rd){
   if(insert_record_into_page(hfile->page,rd)<0){
      nextpage = hfile->header->nofbackets_all;
      //前のページに次のページの番号を書いて保存する
-     memcpy((hfile->page->pagebuf),&nextpage,sizeof(short));
-     write_page(hfile->fd,hfile->page);
+     set_next_page_no(hfile->page, nextpage);
+     db_hashfile_write_page(hfile);   
      //次のページを作成する(pagebufは上書きする)
      generate_page(hfile->page);
      hfile->page->pageno = nextpage;
@@ -147,7 +149,7 @@ record *db_hashfile_read(HFILE *hfile){
   record *rd=NULL;
   
   if(hfile->page->pagebuf == NULL){
-    get_page(hfile->fd,0,hfile->page);
+    db_hashfile_get_page(hfile,0);
   }
   
   while(rd==NULL){
@@ -159,7 +161,7 @@ record *db_hashfile_read(HFILE *hfile){
       }
       else{
       	//新しいページに移動する
-      	get_page(hfile->fd,nextpage,hfile->page);
+        db_hashfile_get_page(hfile,nextpage);
       }
     }
   }
@@ -176,9 +178,7 @@ int db_hashfile_close(HFILE *hfile){
   if(hfile==NULL){
     return -1;
   }
-  if(hfile->fd!=NULL){
-    db_close(hfile->fd);
-  }
+  db_close(hfile->fd);
   free(hfile->page->pagebuf);
 }
 
@@ -192,7 +192,7 @@ recordList *db_hashfile_search_by_scan(HFILE *hfile,char *keyword){
 			if(strcmp(rd->name,keyword)==0){
 				record *rd2=(record *)malloc(sizeof(record));
 				strcpy(rd2->name,rd->name);
-				rd2->age = rd->age;			
+				rd2->age = rd->age;	
 				if(add_record(result,rd2)<0){
 					return NULL;
 				}
@@ -212,7 +212,7 @@ recordList *db_hashfile_search_by_hash(HFILE *hfile,char *keyword){
 		if(strcmp(rd->name,keyword)==0){
 			record *rd2=(record *)malloc(sizeof(record));
 			strcpy(rd2->name,rd->name);
-			rd2->age = rd->age;			
+			rd2->age = rd->age;
 			if(add_record(result,rd2)<0){
 				return NULL;
 			}
@@ -220,3 +220,8 @@ recordList *db_hashfile_search_by_hash(HFILE *hfile,char *keyword){
   	}
   	return result;
 }
+
+void db_hashfile_write_page(HFILE *hfile){
+     write_page(hfile->fd,hfile->page);
+}
+

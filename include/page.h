@@ -24,3 +24,4 @@ int insert_record_into_page(PAGE *page, record *rd);
 int get_next_page_no(PAGE *page);
 unsigned short get_the_first_pointer(PAGE *page);
 unsigned short get_the_last_pointer(PAGE *page);
+int set_next_page_no(PAGE *page, short pageno);
