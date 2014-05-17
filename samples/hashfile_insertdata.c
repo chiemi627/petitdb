@@ -3,7 +3,7 @@
 #include "page.h"
 #include "recordlist.h"
 #include "dbfile.h"
-#include "heapfile.h"
+#include "hashfile.h"
 
 int main(int argc,char *argv[]){
 
@@ -13,14 +13,14 @@ int main(int argc,char *argv[]){
   	nofrecords = atoi(argv[1]);
   }
 
-  char *filename = "testfile.db";
-  HEAPFILE *hfile = new_HEAPFILE();
+  char *filename = "testfile.hash";
+  HFILE *hfile = new_HFILE();
   record *rd = (record *)malloc(sizeof(record));
     
-  db_heapfile_create_and_open(hfile,filename);
-  db_heapfile_get_page(hfile,0);
+  db_hashfile_create_and_open(hfile,filename);
+  db_hashfile_prepare(hfile,4);
 
-  int i;  
+  int i;
   for(i=0;i<nofrecords;i++){
   	  if(i%128==0){
 	      strcpy(rd->name,"xxx");        	  	
@@ -29,8 +29,8 @@ int main(int argc,char *argv[]){
 	      strcpy(rd->name,"abc");      
       }
       rd->age = i;
-	  db_heapfile_insert(hfile,rd);
+	  db_hashfile_insert(hfile,rd);
   }
   //•Â‚¶‚é
-  db_heapfile_close(hfile);
+  db_hashfile_close(hfile);
 }

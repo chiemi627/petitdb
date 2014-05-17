@@ -19,10 +19,12 @@ HFILE *new_HFILE(){
 
 void db_hashfile_create_and_open(HFILE *hfile,char *filename){
   hfile->fd = db_create_and_open(filename);
+  return;
 }
 
 int db_hashfile_open(HFILE *hfile,char *filename){
   hfile->fd = db_open(filename);
+  db_hashfile_get_header(hfile);
   return hfile->fd;
 }
 
@@ -49,15 +51,20 @@ int db_hashfile_write_header(HFILE *hfile){
   if(hfile->header==NULL){
     return -1;
   }
-  db_write_header(hfile->fd,(char *)(hfile->header),sizeof(hashfile_header));
+  lseek(hfile->fd,0,SEEK_SET);
+  write(hfile->fd,&hfile->header->nofbackets_init,sizeof(short));
+  write(hfile->fd,&hfile->header->nofbackets_all,sizeof(short));
+  fsync(hfile->fd);  
 }
 
 /**
    ƒwƒbƒ_‚ðŽæ“¾‚·‚é
  */
-hashfile_header *db_hashfile_get_header(HFILE *hfile){
-   db_get_header(hfile->fd,(char *)hfile->header,sizeof(hashfile_header));
-  return hfile->header;
+void db_hashfile_get_header(HFILE *hfile){
+   //hfile->header = db_get_header(hfile->fd,(char *)hfile->header,sizeof(hashfile_header));
+   lseek(hfile->fd,0,SEEK_SET);
+   read(hfile->fd,&hfile->header->nofbackets_init,sizeof(short));
+   read(hfile->fd,&hfile->header->nofbackets_all,sizeof(short));   
 }
 
 /**
@@ -179,7 +186,6 @@ int db_hashfile_close(HFILE *hfile){
     return -1;
   }
   db_close(hfile->fd);
-  free(hfile->page->pagebuf);
 }
 
 recordList *db_hashfile_search_by_scan(HFILE *hfile,char *keyword){
@@ -223,5 +229,6 @@ recordList *db_hashfile_search_by_hash(HFILE *hfile,char *keyword){
 
 void db_hashfile_write_page(HFILE *hfile){
      write_page(hfile->fd,hfile->page);
+     db_hashfile_write_header(hfile);
 }
 

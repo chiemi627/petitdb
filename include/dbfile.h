@@ -8,5 +8,3 @@ void db_close(int fd);
 int db_drop(char *filename);
 int db_save(int fd, PAGE *page);
 int db_delete(int fd, PAGE *page);
-int db_write_header(int fd,char *header,int size);
-void db_get_header(int fd,char *header,int size);

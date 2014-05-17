@@ -10,7 +10,7 @@ typedef struct HFILE{
 } HFILE;
 
 HFILE *new_HFILE();
-hashfile_header *db_hashfile_get_header(HFILE *hfile);
+void db_hashfile_get_header(HFILE *hfile);
 void db_hashfile_get_page(HFILE *hfile,short pno);
 short db_hashfile_get_number_of_initial_backets(HFILE *hfile);
 short db_hashfile_get_number_of_all_backets(HFILE *hfile);

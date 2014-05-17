@@ -19,7 +19,7 @@ void db_create_hashfile_and_open_makes_backet(){
   db_hashfile_prepare(hfile,nofbacket);
   
   //バケット数がページヘッダについている
-  hashfile_header *header = db_hashfile_get_header(hfile);
+  db_hashfile_get_header(hfile);
   assert(db_hashfile_get_number_of_initial_backets(hfile)==4);
   //1~4page目にヘッダがちゃんとある
   short i;  
@@ -174,29 +174,39 @@ void db_hashfile_query_by_hash_success(){
   HFILE *hfile = new_HFILE();
   db_hashfile_create_and_open(hfile,filename);
   db_hashfile_prepare(hfile,nofbacket);
-  int i;
-  for(i=0;i<26;i++){
-      char *str=(char *)malloc(2);
-      str[0]=i+'A';
+  int i,j;
+  for(i=0;i<200;i++){
+      char *str=(char *)malloc(10);
+      if(i%35==0){
+      	strcpy(str,"xxx");
+      }
+      for(j=0;j<5;j++){
+	      str[j]=(rand()%26)+'A';
+	  }    
       str[1]='\0';
       strcpy(rd->name,str);
       rd->age = i;
 	  db_hashfile_insert(hfile,rd);
   }
   db_save(hfile->fd,hfile->page);
+  db_hashfile_close(hfile);
+  
+  hfile = new_HFILE();
+  db_hashfile_open(hfile,filename);
   // == TEST ==
-  recordList *result = db_hashfile_search_by_hash(hfile,"E");
+  recordList *result = db_hashfile_search_by_hash(hfile,"xxx");
   init_list(result);
   while(has_next(result)>0){
   	rd = get_next(result);
-  	assert(strcmp(rd->name,"E")==0);
-  	assert(rd->age==4);
+  	assert(strcmp(rd->name,"xxx")==0);
+  	//assert(rd->age==4);
   }
   
   db_hashfile_close(hfile);
   db_drop(filename);
   printf("ok\n");
 }
+
 
 int main(){
  db_create_hashfile_and_open_makes_backet();

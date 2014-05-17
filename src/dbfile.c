@@ -115,24 +115,3 @@ int db_delete(int fd, PAGE *page){
     memcpy(page->rinfo_ptr,&flg,sizeof(short));
     return 1;
 }
-
-/**
-  ƒwƒbƒ_‚ð•Û‘¶‚·‚é
- */
-int db_write_header(int fd,char *header,int size){
-  if(header==NULL){
-    return -1;
-  }
-  lseek(fd,0,SEEK_SET);
-  write(fd,header,size);
-  fsync(fd);
-}
-
-/**
-   ƒwƒbƒ_‚ðŽæ“¾‚·‚é
- */
-void db_get_header(int fd,char *header,int size){
-  lseek(fd,0,SEEK_SET);
-  read(header,size,fd);
-  return;
-}
