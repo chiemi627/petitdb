@@ -13,10 +13,14 @@ Please refer sample codes to learn how to use.
   a integer attribute "age" (2bytes).
 
 [How to compile]
+
   % make
 
 [How to use sample codes]
+
   % cd samples
+  
   % make
+  
   run the executable files
 
