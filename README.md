@@ -17,6 +17,8 @@ Please refer sample codes to learn how to use.
 
 [How to use sample codes]
   % cd samples
+  
   % make
+  
   run the executable files
 
