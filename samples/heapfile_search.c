@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "page.h"
@@ -6,7 +7,7 @@
 #include "heapfile.h"
 
 int main(){
-  char *filename = "testfile.db";
+  char *filename = "heapfile.db";
   HEAPFILE *hfile = new_HEAPFILE();
     
   //データベースを開く

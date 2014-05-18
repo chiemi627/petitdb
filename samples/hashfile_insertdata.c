@@ -13,7 +13,7 @@ int main(int argc,char *argv[]){
   	nofrecords = atoi(argv[1]);
   }
 
-  char *filename = "testfile.hash";
+  char *filename = "hashfile.db";
   HFILE *hfile = new_HFILE();
   record *rd = (record *)malloc(sizeof(record));
     

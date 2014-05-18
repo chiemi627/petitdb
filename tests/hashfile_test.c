@@ -215,5 +215,6 @@ int main(){
  db_hashfile_inserting_5_records_store_in_file();
  db_hashfile_query_by_scan_success();
  db_hashfile_query_by_hash_success();
- printf("All test are passed\n");
+ printf("ALL TESTS ARE PASSED\n");
+ return 0;
 }

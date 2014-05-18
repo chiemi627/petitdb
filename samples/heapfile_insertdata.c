@@ -13,7 +13,7 @@ int main(int argc,char *argv[]){
   	nofrecords = atoi(argv[1]);
   }
 
-  char *filename = "testfile.db";
+  char *filename = "heapfile.db";
   HEAPFILE *hfile = new_HEAPFILE();
   record *rd = (record *)malloc(sizeof(record));
     

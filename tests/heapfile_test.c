@@ -335,5 +335,6 @@ int main(){
     db_insert_12_records_in_two_pages();
     db_insert_100_records_generate_9_pages();
     db_insert_100_records_and_read();
-	printf("All test are passed\n");
+	printf("ALL TEST ARE PASSED.\n");
+	return 0;
 }

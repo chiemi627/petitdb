@@ -29,4 +29,6 @@ void make_recordList_test(){
 
 int main(){
  make_recordList_test();
+ printf("ALL TESTS ARE PASSED.\n");
+ return 0;
 }
